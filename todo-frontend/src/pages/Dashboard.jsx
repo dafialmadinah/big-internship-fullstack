@@ -7,8 +7,8 @@ const Dashboard = () => {
     const [todos, setTodos] = useState([])
     const [title, setTitle] = useState("")
 
-    const fetchTodos = async () => {
-        const res = await api.get("/todos")
+    const fetchTodos = async (completed) => {
+        const res = await api.get("/todos", { params: { completed } })
         setTodos(res.data)
     }
 
@@ -19,7 +19,7 @@ const Dashboard = () => {
 
     const addTodo = async () => {
         if (!title.trim()) return;
-        await api.post("/todos", {title})
+        await api.post("/todos", { title })
         setTitle("")
         fetchTodos()
     }

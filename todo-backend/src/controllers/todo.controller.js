@@ -1,8 +1,13 @@
 const Todo = require("../models/Todo");
 
 exports.getTodos = async (req, res) => {
+  const { completed } = req.query;
+  const filter = { user: req.userId };
+  if (completed !== undefined) {
+    filter.completed = completed;
+  }
   try {
-    const todos = await Todo.find({ user: req.userId });
+    const todos = await Todo.find(filter);
     res.json(todos);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -10,18 +15,16 @@ exports.getTodos = async (req, res) => {
 };
 
 exports.createTodo = async (req, res) => {
+  console.log(req.body)
   try {
     const { title } = req.body;
-
     if (!title) {
       return res.status(400).json({ message: "Title is required" });
     }
-
     const todo = await Todo.create({
       title,
       user: req.userId,
     });
-
     res.status(201).json(todo);
   } catch (error) {
     res.status(500).json({ message: message.error });
